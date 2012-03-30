@@ -8,6 +8,7 @@ from urllib import urlretrieve
 import tempfile
 import os
 
+backlog=1
 wait=15 #default is 15 seconds but can be overridden in config.py
 execfile(os.path.expanduser("~/.twitternotify/config.py"))
 
@@ -112,10 +113,10 @@ while 1:
 		if len(all) == 0 and backlog == 0:
 			for s in stat:
 				all.append(s.text)
-		for s in stat:
-			if not s.text in all:
-				notify(s.user,s.text)
-				all.append(s.text)
-
+		for s in reversed(stat):
+			if s.text in all:
+				continue
+			notify(s.user,s.text)
+			all.append(s.text)
 		time.sleep(wait)
 
